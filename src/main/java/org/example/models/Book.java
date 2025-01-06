@@ -1,19 +1,39 @@
-package org.example.model;
+package org.example.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.util.Date;
+
+@Entity
+@Table(name = "Book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty(message = "Название не должно быть пустым")
     @Size(min = 2, max = 100, message = "Название должно быть длиной от 2 до 100 символов")
+    @Column(name = "title")
     private String title;
     @NotEmpty(message = "Имя автора не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя автора должно быть длиной от 2 до 100 символов")
+    @Column(name = "author")
     private String author;
     @Min(value = 1500, message = "Год должен быть больше 1500")
+    @Column(name = "year")
     private int year;
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+    @Transient
+    private boolean expired;
+
 
     public Book() {
     }
@@ -54,5 +74,29 @@ public class Book {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

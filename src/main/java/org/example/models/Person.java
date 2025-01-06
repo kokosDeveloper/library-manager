@@ -1,17 +1,27 @@
-package org.example.model;
+package org.example.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+@Entity
+@Table(name = "Person")
 public class Person {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
+    @Column(name = "full_name")
     private String fullName;
     @Min(value = 1900, message = "Год рождения должен быть больше 1900")
+    @Column(name = "birth_year")
     private int birthYear;
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
 
     public Person() {
     }
@@ -43,5 +53,13 @@ public class Person {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
